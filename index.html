@@ -1,0 +1,560 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Unit 8: FILMS - Full Textbook Edition</title>
+<style>
+  :root {
+    --primary: #d32f2f; /* Cinema Red */
+    --secondary: #1976d2; /* Blue */
+    --accent: #388e3c; /* Green */
+    --bg: #f5f5f5;
+    --text: #212121;
+    --card: #ffffff;
+    --vi-text: #616161;
+  }
+
+  body { margin: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: var(--bg); color: var(--text); padding-bottom: 60px; }
+  
+  /* HEADER */
+  header { background: #fff; box-shadow: 0 2px 5px rgba(0,0,0,0.1); position: sticky; top: 0; z-index: 100; }
+  .header-content { max-width: 1000px; margin: 0 auto; padding: 15px; display: flex; justify-content: space-between; align-items: center; }
+  .logo { font-size: 20px; font-weight: 900; color: var(--primary); text-transform: uppercase; }
+  .sub-logo { font-size: 12px; color: #666; }
+  
+  .controls { display: flex; gap: 10px; }
+  .btn-toggle { border: 1px solid #ccc; background: #fff; padding: 5px 10px; border-radius: 20px; cursor: pointer; font-size: 13px; display: flex; align-items: center; gap: 5px; }
+  .btn-toggle.active { background: var(--secondary); color: #fff; border-color: var(--secondary); }
+
+  /* LAYOUT */
+  .container { max-width: 1000px; margin: 20px auto; padding: 0 15px; display: grid; grid-template-columns: 250px 1fr; gap: 20px; }
+  @media (max-width: 768px) { .container { grid-template-columns: 1fr; } }
+
+  /* SIDEBAR NAV */
+  .sidebar { background: var(--card); border-radius: 8px; padding: 15px; height: fit-content; position: sticky; top: 80px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
+  .nav-item { display: block; width: 100%; text-align: left; padding: 10px; border: none; background: none; cursor: pointer; border-radius: 5px; font-weight: 600; color: #555; transition: 0.2s; margin-bottom: 5px; }
+  .nav-item:hover { background: #eee; }
+  .nav-item.active { background: var(--primary); color: #fff; }
+  .nav-sub { font-size: 12px; font-weight: 400; display: block; opacity: 0.8; }
+
+  /* CONTENT AREA */
+  .section-title { font-size: 24px; color: var(--primary); margin-bottom: 5px; border-bottom: 2px solid #eee; padding-bottom: 10px; }
+  .section-desc { font-size: 14px; color: #666; margin-bottom: 20px; font-style: italic; }
+
+  /* BOXES */
+  .box { background: var(--card); border-radius: 8px; padding: 20px; margin-bottom: 20px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); border: 1px solid #e0e0e0; }
+  .box-title { font-size: 16px; font-weight: 700; margin-bottom: 15px; color: var(--secondary); display: flex; align-items: center; gap: 10px; }
+  
+  /* SCRIPT / READING */
+  .content-text { line-height: 1.6; margin-bottom: 15px; background: #fafafa; padding: 15px; border-radius: 5px; border-left: 4px solid var(--secondary); }
+  .line { margin-bottom: 8px; cursor: pointer; padding: 5px; border-radius: 4px; }
+  .line:hover { background: #e3f2fd; }
+  .line.speaking { background: #fff9c4; border-left: 3px solid #fbc02d; }
+  .speaker { font-weight: 800; font-size: 13px; color: #333; margin-right: 5px; }
+  .text-en { font-size: 15px; display: block; }
+  .text-vi { font-size: 13px; color: var(--vi-text); font-style: italic; display: block; margin-top: 2px; }
+  .hidden { display: none; }
+
+  /* AUDIO PLAYER */
+  .audio-player { display: flex; align-items: center; gap: 10px; background: #222; padding: 10px 20px; border-radius: 30px; color: #fff; width: fit-content; margin-bottom: 15px; }
+  .btn-play { background: none; border: none; color: #fff; font-size: 20px; cursor: pointer; }
+  .btn-play:hover { color: var(--primary); }
+
+  /* QUESTIONS */
+  .q-block { margin-bottom: 15px; padding-bottom: 15px; border-bottom: 1px dashed #eee; }
+  .q-text { font-weight: 600; margin-bottom: 8px; }
+  .q-vi { font-size: 13px; color: #888; font-style: italic; margin-bottom: 8px; }
+  .options { display: flex; flex-direction: column; gap: 5px; }
+  .opt-label { display: flex; align-items: center; gap: 10px; cursor: pointer; padding: 8px; border-radius: 5px; border: 1px solid #eee; transition: 0.2s; }
+  .opt-label:hover { background: #f5f5f5; }
+  .opt-label.correct { background: #e8f5e9; border-color: var(--accent); color: #2e7d32; font-weight: 600; }
+  .opt-label.wrong { background: #ffebee; border-color: var(--primary); color: #c62828; }
+  .opt-label input { accent-color: var(--primary); }
+
+  /* FILL IN BLANK */
+  .input-fill { border: 1px solid #ccc; padding: 5px 10px; border-radius: 4px; width: 150px; font-family: inherit; }
+  .input-fill.correct { border-color: var(--accent); background: #e8f5e9; }
+  .input-fill.wrong { border-color: var(--primary); background: #ffebee; }
+
+  .btn-check { background: var(--primary); color: #fff; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer; font-weight: 600; margin-top: 10px; }
+  .btn-check:hover { background: #b71c1c; }
+
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-content">
+    <div>
+      <div class="logo">UNIT 8: FILMS</div>
+      <div class="sub-logo">Global Success 7 • Full Edition</div>
+    </div>
+    <div class="controls">
+      <button class="btn-toggle active" id="btnVi" onclick="toggleVi()">
+        <span>🇻🇳</span> Dịch Tiếng Việt
+      </button>
+    </div>
+  </div>
+</header>
+
+<div class="container">
+  <div class="sidebar" id="navSidebar">
+    </div>
+
+  <div id="mainContent">
+    </div>
+</div>
+
+<script>
+/* ==========================================================================
+   DATABASE: FULL CONTENT FROM TEXTBOOK (P.82 - P.90)
+   ========================================================================== */
+const DATA = [
+  {
+    id: "getting_started",
+    title: "1. Getting Started",
+    desc: "Listen and Read (Ex 1, 2, 3, 4) - Page 82, 83",
+    type: "dialogue",
+    script: [
+      {role: "Mark", en: "Let's go to the cinema tonight!", vi: "Tối nay đi xem phim đi!"},
+      {role: "Mi", en: "Good idea! What shall we see?", vi: "Ý kiến hay! Xem phim gì đây?"},
+      {role: "Mark", en: "A Nightmare is on at Sao Mai Cinema tonight.", vi: "Phim 'A Nightmare' đang chiếu ở rạp Sao Mai tối nay."},
+      {role: "Mi", en: "Is it a fantasy?", vi: "Đó có phải phim giả tưởng không?"},
+      {role: "Mark", en: "No, it's a horror film.", vi: "Không, đó là phim kinh dị."},
+      {role: "Mi", en: "That's too scary for me. Look! An Old Pier is on at Town Cinema. It's a documentary.", vi: "Sợ quá tớ không xem đâu. Nhìn kìa! 'An Old Pier' đang chiếu ở rạp Town. Đó là phim tài liệu."},
+      {role: "Mark", en: "I don't really like documentaries. They're often boring. What about Our Holiday?", vi: "Tớ không thích phim tài liệu lắm. Chúng thường tẻ nhạt. Còn phim 'Our Holiday' thì sao?"},
+      {role: "Mi", en: "What kind of film is it?", vi: "Đó là thể loại phim gì?"},
+      {role: "Mark", en: "It's a comedy.", vi: "Đó là phim hài."},
+      {role: "Mi", en: "And who stars in it?", vi: "Ai đóng vai chính?"},
+      {role: "Mark", en: "Kate Harrison and Lily Collins.", vi: "Kate Harrison và Lily Collins."},
+      {role: "Mi", en: "Um, they're pretty good. What's it about?", vi: "Ừm, họ diễn khá hay. Phim nói về gì?"},
+      {role: "Mark", en: "It's about two women living in different countries and they decide to exchange houses.", vi: "Phim kể về hai người phụ nữ sống ở hai nước khác nhau và họ quyết định đổi nhà cho nhau."},
+      {role: "Mi", en: "What are the reviews like?", vi: "Các bài đánh giá nói gì?"},
+      {role: "Mark", en: "Well, although a few people say it's a bit silly, most say it's funny and interesting.", vi: "À, mặc dù một vài người nói phim hơi ngớ ngẩn, nhưng đa số khen phim hài hước và thú vị."}
+    ],
+    exercises: [
+      {
+        title: "Ex 2: Read conversation again and answer",
+        questions: [
+          { q: "What does Mark suggest doing tonight?", vi: "Mark gợi ý làm gì?", opts: ["Watching a TV show", "Watching a film", "Staying at home"], ans: 1 },
+          { q: "Why doesn't Mark want to see 'An Old Pier'?", vi: "Tại sao Mark không muốn xem 'An Old Pier'?", opts: ["He doesn't like that type of film", "It's not on at a convenient time", "He saw it last week"], ans: 0 },
+          { q: "The word 'reviews' mostly means ______.", vi: "Từ 'reviews' nghĩa là...", opts: ["opinions about a film", "interesting scenes", "what people dislike"], ans: 0 },
+          { q: "What do people think of 'Our Holiday'?", vi: "Mọi người nghĩ gì về 'Our Holiday'?", opts: ["Everyone likes it", "No one likes it", "Most people like it"], ans: 2 }
+        ]
+      },
+      {
+        title: "Ex 3: Match definition with film type",
+        questions: [
+          { q: "A film that tries to make the audience laugh.", vi: "Phim gây cười.", opts: ["Comedy", "Documentary"], ans: 0 },
+          { q: "A film based only on imagination, not real facts.", vi: "Phim dựa trên tưởng tượng.", opts: ["Comedy", "Fantasy"], ans: 1 },
+          { q: "A film that shows real life events or stories.", vi: "Phim chiếu sự kiện đời thực.", opts: ["Documentary", "Horror film"], ans: 0 },
+          { q: "A film set in the future, often about science.", vi: "Phim bối cảnh tương lai, khoa học.", opts: ["Cartoon", "Science fiction film"], ans: 1 },
+          { q: "A film in which strange and frightening things happen.", vi: "Phim có những thứ đáng sợ.", opts: ["Horror film", "Comedy"], ans: 0 }
+        ]
+      },
+      {
+        title: "Ex 4: Fill in the adjectives",
+        type: "fill",
+        questions: [
+          { q: "Going to the hospital can be ______ for a child.", vi: "Đi bệnh viện có thể ______ với trẻ.", ans: "frightening" },
+          { q: "The film was so ______ that the audience couldn't stop laughing.", vi: "Phim ______ đến mức khán giả cười không ngớt.", ans: "funny" },
+          { q: "Many people cried when they saw the ______ scenes.", vi: "Nhiều người khóc khi xem cảnh ______.", ans: "moving" },
+          { q: "The film was so ______ that we fell asleep.", vi: "Phim ______ đến nỗi chúng tôi ngủ gật.", ans: "boring" },
+          { q: "This book is ______. I got a lot of useful information.", vi: "Sách rất ______. Có nhiều thông tin hữu ích.", ans: "interesting" }
+        ]
+      }
+    ]
+  },
+  {
+    id: "closer_look_1",
+    title: "2. A Closer Look 1",
+    desc: "Vocabulary & Pronunciation (Page 84)",
+    type: "quiz",
+    exercises: [
+      {
+        title: "Ex 2: Complete sentences with adjectives",
+        type: "fill",
+        questions: [
+          { q: "The film 'A Polluted Planet' is hard to believe. It's a ______ documentary.", vi: "Phim khó tin -> ...", ans: "shocking" },
+          { q: "The film was so ______ that we almost fell asleep.", vi: "Phim quá ______ nên suýt ngủ gật.", ans: "dull" },
+          { q: "You will enjoy 'Our Holiday'. It's quite ______.", vi: "Bạn sẽ thích nó. Nó khá ______.", ans: "enjoyable" },
+          { q: "There were too many fights in the film. It was too ______.", vi: "Quá nhiều đánh nhau -> ______.", ans: "violent" },
+          { q: "I didn't understand the film. It was very ______.", vi: "Không hiểu phim -> ______.", ans: "confusing" }
+        ]
+      }
+    ]
+  },
+  {
+    id: "closer_look_2",
+    title: "3. A Closer Look 2",
+    desc: "Grammar: Although, Though, However (Page 85)",
+    type: "quiz",
+    exercises: [
+      {
+        title: "Ex 2: Choose the correct connector",
+        questions: [
+          { q: "______ the acting in the film was good, I didn't like its story.", vi: "______ diễn xuất tốt, tôi vẫn không thích cốt truyện.", opts: ["Although", "However", "Because"], ans: 0 },
+          { q: "I felt really tired. ______, I went to see the film.", vi: "Tôi mệt. ______, tôi vẫn đi xem phim.", opts: ["Although", "However", "So"], ans: 1 },
+          { q: "I really enjoyed the film ______ most of my friends didn't like it.", vi: "Tôi thích phim ______ bạn tôi không thích.", opts: ["although", "however", "so"], ans: 0 },
+          { q: "He studied hard. ______, he failed the exam.", vi: "Học chăm. ______, vẫn trượt.", opts: ["Although", "However", "Because"], ans: 1 },
+          { q: "Mai speaks English well ______ her native language is Vietnamese.", vi: "Mai nói tiếng Anh giỏi ______ tiếng mẹ đẻ là tiếng Việt.", opts: ["although", "however", "but"], ans: 0 }
+        ]
+      },
+      {
+        title: "Ex 4: Choose the correct answer",
+        questions: [
+          { q: "Mary overslept ______ she went to bed early.", vi: "Mary ngủ quên ______ đã đi ngủ sớm.", opts: ["although", "because", "so"], ans: 0 },
+          { q: "______ the sun is shining, it isn't very warm.", vi: "______ trời nắng, nhưng không ấm.", opts: ["Because", "However", "Though"], ans: 2 },
+          { q: "I don't like running. ______ I like swimming.", vi: "Tôi không thích chạy. ______ tôi thích bơi.", opts: ["But", "So", "However"], ans: 0 },
+          { q: "______ the film was exciting, Jim fell asleep.", vi: "______ phim hay, Jim vẫn ngủ gật.", opts: ["However", "Although", "Because"], ans: 1 },
+          { q: "The story is silly. ______, many people enjoyed it.", vi: "Cốt truyện ngớ ngẩn. ______, nhiều người vẫn thích.", opts: ["However", "Though", "But"], ans: 0 }
+        ]
+      }
+    ]
+  },
+  {
+    id: "communication",
+    title: "4. Communication",
+    desc: "Everyday English & Film Survey (Page 86)",
+    type: "dialogue",
+    script: [
+      {role: "Tom", en: "Hi Lan. I'm doing a survey about films. Can I ask you some questions?", vi: "Chào Lan. Tớ đang khảo sát về phim. Tớ hỏi cậu vài câu nhé?"},
+      {role: "Lan", en: "Sure. Go ahead.", vi: "Chắc chắn rồi. Hỏi đi."},
+      {role: "Tom", en: "What kind of films do you like best?", vi: "Cậu thích thể loại phim nào nhất?"},
+      {role: "Lan", en: "I love comedies.", vi: "Tớ yêu phim hài."},
+      {role: "Tom", en: "What's the name of your favourite comedy?", vi: "Tên phim hài yêu thích của cậu là gì?"},
+      {role: "Lan", en: "It's Dr Johnny.", vi: "Là phim Dr Johnny."},
+      {role: "Tom", en: "Who stars in it?", vi: "Ai đóng vai chính?"},
+      {role: "Lan", en: "Bill Harris.", vi: "Bill Harris."},
+      {role: "Tom", en: "What do you think of it?", vi: "Cậu nghĩ gì về nó?"},
+      {role: "Lan", en: "It's very funny.", vi: "Nó rất hài hước."}
+    ],
+    exercises: [
+      {
+        title: "Ex 3: Listen and fill in the blanks",
+        type: "fill",
+        questions: [
+          { q: "What kind of films do you like (1) ______?", ans: "best" },
+          { q: "I love (2) ______.", ans: "comedies" },
+          { q: "What's the name of your (3) ______ comedy?", ans: "favourite" },
+          { q: "Who (4) ______ in it?", ans: "stars" },
+          { q: "It's very (5) ______.", ans: "funny" }
+        ]
+      }
+    ]
+  },
+  {
+    id: "skills_1",
+    title: "5. Skills 1 (Reading)",
+    desc: "Review of Harry Potter (Page 88)",
+    type: "reading",
+    content: [
+      { en: "Harry Potter and the Sorcerer's Stone is a fantasy. Its director is Chris Columbus. It is the first of the Harry Potter film series.", vi: "Harry Potter và Hòn đá Phù thủy là một bộ phim giả tưởng. Đạo diễn là Chris Columbus. Đây là phần đầu tiên trong loạt phim Harry Potter." },
+      { en: "Daniel Radcliffe is one of the stars in the film. The film tells the story of Harry Potter. He's a powerful wizard.", vi: "Daniel Radcliffe là một trong những ngôi sao của phim. Bộ phim kể câu chuyện về Harry Potter. Cậu ấy là một phù thủy đầy quyền năng." },
+      { en: "He is a student at a school for wizards and learns about himself, his family, and the bad things happening around him.", vi: "Cậu là học sinh tại một trường đào tạo phù thủy và học về bản thân mình, gia đình mình, và những điều xấu xa đang xảy ra quanh cậu." },
+      { en: "The film received a lot of good reviews. People say it's a must-see for teens.", vi: "Bộ phim đã nhận được nhiều đánh giá tốt. Mọi người nói đây là phim thanh thiếu niên nhất định phải xem." },
+      { en: "I agree because the story is gripping and the acting is excellent. The music is also amazing.", vi: "Tôi đồng ý vì cốt truyện lôi cuốn và diễn xuất xuất sắc. Âm nhạc cũng rất tuyệt vời." },
+      { en: "Although Harry Potter and the Sorcerer's Stone is a little frightening at times, it is very interesting and full of action.", vi: "Mặc dù Harry Potter và Hòn đá Phù thủy đôi khi hơi đáng sợ, nhưng nó rất thú vị và đầy hành động." }
+    ],
+    exercises: [
+      {
+        title: "Ex 3: Answer the questions",
+        questions: [
+          { q: "What kind of film is it?", vi: "Đây là thể loại phim gì?", opts: ["Horror", "Fantasy", "Documentary"], ans: 1 },
+          { q: "Who is Daniel Radcliffe?", vi: "Daniel Radcliffe là ai?", opts: ["The director", "One of the stars", "A wizard"], ans: 1 },
+          { q: "What does Mark think about the story?", vi: "Mark nghĩ gì về cốt truyện?", opts: ["It is boring", "It is silly", "It is gripping"], ans: 2 },
+          { q: "Is the film frightening?", vi: "Phim có đáng sợ không?", opts: ["No, never", "Yes, at times", "Yes, all the time"], ans: 1 }
+        ]
+      }
+    ]
+  },
+  {
+    id: "skills_2",
+    title: "6. Skills 2 (Listening)",
+    desc: "Film: Naughty Twins (Page 89)",
+    type: "dialogue",
+    script: [
+      {role: "Mark", en: "Hoa, have you seen the film Naughty Twins?", vi: "Hoa, cậu xem phim Cặp Sinh Đôi Nghịch Ngợm chưa?"},
+      {role: "Hoa", en: "Yes, I have. I saw it last week.", vi: "Tớ xem rồi. Tớ xem tuần trước."},
+      {role: "Mark", en: "What kind of film is it?", vi: "Đó là thể loại phim gì?"},
+      {role: "Hoa", en: "It's a comedy.", vi: "Đó là phim hài."},
+      {role: "Mark", en: "Who are the main characters?", vi: "Nhân vật chính là ai?"},
+      {role: "Hoa", en: "They are twin sisters.", vi: "Họ là hai chị em sinh đôi."},
+      {role: "Mark", en: "Where do they meet each other for the first time?", vi: "Họ gặp nhau lần đầu ở đâu?"},
+      {role: "Hoa", en: "They meet at a summer camp.", vi: "Họ gặp nhau ở một trại hè."},
+      {role: "Mark", en: "What do people say about the film?", vi: "Mọi người nói gì về bộ phim?"},
+      {role: "Hoa", en: "People say it's a film that young people should see. It's very funny.", vi: "Mọi người nói đó là bộ phim giới trẻ nên xem. Nó rất hài hước."}
+    ],
+    exercises: [
+      {
+        title: "Ex 3: Choose the correct answer",
+        questions: [
+          { q: "What kind of film is 'Naughty Twins'?", vi: "Naughty Twins là phim gì?", opts: ["Comedy", "Sci-fi", "Horror"], ans: 0 },
+          { q: "Who are the main characters?", vi: "Nhân vật chính là ai?", opts: ["Old classmates", "Twin brothers", "Twin sisters"], ans: 2 },
+          { q: "Where do they meet?", vi: "Họ gặp nhau ở đâu?", opts: ["At a summer camp", "At a school", "At a hospital"], ans: 0 },
+          { q: "What is the review of the film?", vi: "Đánh giá về phim như thế nào?", opts: ["Shocking", "Young people should see", "Boring"], ans: 1 }
+        ]
+      }
+    ]
+  },
+  {
+    id: "looking_back",
+    title: "7. Looking Back",
+    desc: "Review Vocab & Grammar (Page 90)",
+    type: "quiz",
+    exercises: [
+      {
+        title: "Ex 3: Choose the correct answer",
+        questions: [
+          { q: "The film was long and ______. Many people went home early.", vi: "Phim dài và ______. Nhiều người về sớm.", opts: ["funny", "shocking", "dull (boring)"], ans: 2 },
+          { q: "The film is too ______ with fighting and killing.", vi: "Phim quá ______ với cảnh đánh nhau.", opts: ["violent", "funny", "interesting"], ans: 0 },
+          { q: "A ______ story makes us feel afraid.", vi: "Câu chuyện ______ làm ta sợ.", opts: ["moving", "frightening", "funny"], ans: 1 },
+          { q: "The news was ______. I couldn't believe it.", vi: "Tin tức thật ______. Tôi không thể tin nổi.", opts: ["shocking", "confusing", "dull"], ans: 0 },
+          { q: "______ films often make us cry.", vi: "Phim ______ thường làm ta khóc.", opts: ["Moving", "Funny", "Boring"], ans: 0 },
+          { q: "The road signs were ______, so we got lost.", vi: "Biển báo ______, nên chúng tôi bị lạc.", opts: ["confusing", "shocking", "interesting"], ans: 0 }
+        ]
+      },
+      {
+        title: "Ex 4: Match sentence halves",
+        type: "match", // Simple view for matching
+        questions: [
+          { q: "Although he arrived late, ...", opts: ["...he left the cinema early.", "...he stayed late."], ans: 0 },
+          { q: "The film received good reviews. ...", opts: ["...However, few people saw it.", "...However, it was bad."], ans: 0 },
+          { q: "Though tickets are expensive, ...", opts: ["...people still buy them.", "...no one buys them."], ans: 0 },
+          { q: "Although I don't like the cinema, ...", opts: ["...I don't want to stay home.", "...I will stay home."], ans: 0 }
+        ]
+      }
+    ]
+  }
+];
+
+/* ==========================================================================
+   APP ENGINE (TTS, UI, LOGIC)
+   ========================================================================== */
+let currentSection = 0;
+let synthesis = window.speechSynthesis;
+let voices = [];
+let isViVisible = true;
+
+// INIT
+window.onload = () => {
+  renderSidebar();
+  loadSection(0);
+  
+  // Voice loading strategy
+  if (synthesis.onvoiceschanged !== undefined) {
+    synthesis.onvoiceschanged = () => { voices = synthesis.getVoices(); };
+  }
+  setTimeout(() => { voices = synthesis.getVoices(); }, 500);
+};
+
+// UI RENDER
+function renderSidebar() {
+  const sb = document.getElementById('navSidebar');
+  sb.innerHTML = '';
+  DATA.forEach((sec, idx) => {
+    const btn = document.createElement('button');
+    btn.className = `nav-item ${idx === 0 ? 'active' : ''}`;
+    btn.innerHTML = `${sec.title} <span class="nav-sub">${sec.desc}</span>`;
+    btn.onclick = () => {
+      document.querySelectorAll('.nav-item').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      loadSection(idx);
+    };
+    sb.appendChild(btn);
+  });
+}
+
+function toggleVi() {
+  isViVisible = !isViVisible;
+  document.querySelectorAll('.text-vi, .q-vi, .vi-trans').forEach(el => el.classList.toggle('hidden', !isViVisible));
+  document.getElementById('btnVi').classList.toggle('active', isViVisible);
+}
+
+function loadSection(idx) {
+  synthesis.cancel(); // Stop audio
+  currentSection = idx;
+  const data = DATA[idx];
+  const main = document.getElementById('mainContent');
+  
+  let html = `<div class="section-title">${data.title}</div>
+              <div class="section-desc">${data.desc}</div>`;
+
+  // DIALOGUE SECTION
+  if (data.type === 'dialogue') {
+    html += `
+      <div class="box">
+        <div class="box-title">🎧 Audio Script</div>
+        <div class="audio-player">
+          <button class="btn-play" onclick="playScript(${idx})">▶ Play Audio</button>
+        </div>
+        <div class="content-text" id="scriptBox">
+          ${data.script.map((line, i) => `
+            <div class="line" id="line-${i}" onclick="playLine(${idx}, ${i})">
+              <span class="speaker">${line.role}:</span>
+              <span class="text-en">${line.en}</span>
+              <span class="text-vi ${isViVisible?'':'hidden'}">${line.vi}</span>
+            </div>
+          `).join('')}
+        </div>
+      </div>
+    `;
+  }
+
+  // READING SECTION
+  if (data.type === 'reading' && data.content) {
+    html += `
+      <div class="box">
+        <div class="box-title">📖 Reading Passage</div>
+        <div class="content-text">
+          ${data.content.map(p => `
+            <p style="margin-bottom:10px">
+              <span class="text-en">${p.en}</span>
+              <span class="text-vi ${isViVisible?'':'hidden'}">${p.vi}</span>
+            </p>
+          `).join('')}
+        </div>
+      </div>
+    `;
+  }
+
+  // EXERCISES
+  if (data.exercises) {
+    html += `<div class="box"><div class="box-title">✍️ Exercises</div>`;
+    data.exercises.forEach((ex, exIdx) => {
+      html += `<div style="margin-bottom:20px; font-weight:bold; color:#d32f2f;">${ex.title}</div>`;
+      
+      ex.questions.forEach((q, qIdx) => {
+        const qId = `ex${exIdx}_q${qIdx}`;
+        html += `<div class="q-block">
+          <div class="q-text">${qIdx + 1}. ${q.q}</div>
+          <div class="q-vi ${isViVisible?'':'hidden'}">${q.vi || ''}</div>`;
+        
+        if (ex.type === 'fill') {
+          html += `<input type="text" class="input-fill" id="${qId}" data-ans="${q.ans}">`;
+        } else {
+          // MCQ or Match (Simplified to MCQ style)
+          html += `<div class="options">`;
+          q.opts.forEach((opt, oIdx) => {
+            html += `<label class="opt-label" id="${qId}_opt${oIdx}">
+              <input type="radio" name="${qId}" value="${oIdx}">
+              ${opt}
+            </label>`;
+          });
+          html += `</div>`;
+        }
+        html += `</div>`;
+      });
+    });
+    html += `<button class="btn-check" onclick="checkAnswers(${idx})">Check Answers</button></div>`;
+  }
+
+  main.innerHTML = html;
+}
+
+/* ==========================================================================
+   TTS ENGINE
+   ========================================================================== */
+function getVoice(role) {
+  const females = ["Mi", "Lan", "Hoa", "Trang", "Anna", "Mum"];
+  // Try to find English voices
+  const enVoices = voices.filter(v => v.lang.includes('en'));
+  const isFemale = females.includes(role);
+  
+  // Heuristic matching
+  let selected = isFemale 
+    ? enVoices.find(v => v.name.includes('Female') || v.name.includes('Google US')) 
+    : enVoices.find(v => v.name.includes('Male') || v.name.includes('Google UK'));
+    
+  return selected || enVoices[0];
+}
+
+function playScript(idx) {
+  const script = DATA[idx].script;
+  synthesis.cancel();
+  
+  let i = 0;
+  function speakNext() {
+    if (i >= script.length) return;
+    const line = script[i];
+    const utterance = new SpeechSynthesisUtterance(line.en);
+    utterance.voice = getVoice(line.role);
+    utterance.rate = 0.9;
+    
+    // Highlight
+    document.querySelectorAll('.line').forEach(l => l.classList.remove('speaking'));
+    const el = document.getElementById(`line-${i}`);
+    if(el) {
+      el.classList.add('speaking');
+      el.scrollIntoView({behavior: "smooth", block: "center"});
+    }
+
+    utterance.onend = () => { i++; speakNext(); };
+    synthesis.speak(utterance);
+  }
+  speakNext();
+}
+
+function playLine(secIdx, lineIdx) {
+  synthesis.cancel();
+  const line = DATA[secIdx].script[lineIdx];
+  const utterance = new SpeechSynthesisUtterance(line.en);
+  utterance.voice = getVoice(line.role);
+  document.querySelectorAll('.line').forEach(l => l.classList.remove('speaking'));
+  document.getElementById(`line-${lineIdx}`).classList.add('speaking');
+  synthesis.speak(utterance);
+}
+
+/* ==========================================================================
+   GRADING LOGIC
+   ========================================================================== */
+function checkAnswers(secIdx) {
+  const exercises = DATA[secIdx].exercises;
+  let score = 0;
+  let total = 0;
+
+  exercises.forEach((ex, exIdx) => {
+    ex.questions.forEach((q, qIdx) => {
+      total++;
+      const qId = `ex${exIdx}_q${qIdx}`;
+      
+      if (ex.type === 'fill') {
+        const input = document.getElementById(qId);
+        if (input.value.trim().toLowerCase() === q.ans.toLowerCase()) {
+          input.classList.add('correct');
+          input.classList.remove('wrong');
+          score++;
+        } else {
+          input.classList.add('wrong');
+          input.classList.remove('correct');
+          // Show correct answer? Maybe later.
+        }
+      } else {
+        const selected = document.querySelector(`input[name="${qId}"]:checked`);
+        const labels = document.querySelectorAll(`[id^="${qId}_opt"]`);
+        
+        labels.forEach(l => l.classList.remove('correct', 'wrong'));
+        
+        if (selected) {
+          const val = parseInt(selected.value);
+          if (val === q.ans) {
+            score++;
+            document.getElementById(`${qId}_opt${val}`).classList.add('correct');
+          } else {
+            document.getElementById(`${qId}_opt${val}`).classList.add('wrong');
+            document.getElementById(`${qId}_opt${q.ans}`).classList.add('correct');
+          }
+        } else {
+           document.getElementById(`${qId}_opt${q.ans}`).classList.add('correct');
+        }
+      }
+    });
+  });
+  
+  alert(`Bạn làm đúng ${score}/${total} câu!`);
+}
+
+</script>
+</body>
+</html>
